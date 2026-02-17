@@ -32,8 +32,27 @@ function moveRandom() {
 btn.addEventListener("mouseenter", moveRandom);
 btn.addEventListener("mousemove", moveRandom);
 
-btn.addEventListener("click", () => {
-  alert("If the server checks that four letters arrive at the same time, you will get flag. Make sure you request with same session id for all four letters!");
+btn.addEventListener("click", async () => {
+  try {
+    const r = await fetch("/api/h1nt-message", { cache: "no-store" });
+    const data = await r.json();
+
+    if (toast) {
+      toast.textContent = data.message || "No message";
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2500);
+    } else {
+      alert(data.message || "No message");
+    }
+  } catch (e) {
+    if (toast) {
+      toast.textContent = "Error loading message";
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1500);
+    } else {
+      alert("Error loading message");
+    }
+  }
 });
 
 
