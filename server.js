@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ---- Challenge config ----
-const FLAG = process.env.FLAG || "flag{r4c3_c0nd1t10n_15_Yummy}";
+const FLAG = process.env.FLAG || "flag{f4ke}";
 const WINDOW_MS = 80;  
 const REQUIRED = new Set(["f", "l", "a", "g"]);
 
