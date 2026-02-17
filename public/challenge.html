@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Four Buttons</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="challenge">
+  <main class="center">
+    <section class="panel">
+      <h1 class="title">Press buttons to get flag</h1>
+
+      <div class="row" id="buttons" style="margin-bottom: 20px;">
+        <button class="btn" data-letter="f" aria-label="f">f</button>
+        <button class="btn" data-letter="l" aria-label="l">l</button>
+        <button class="btn" data-letter="a" aria-label="a">a</button>
+        <button class="btn" data-letter="g" aria-label="g">g</button>
+      </div>
+
+      <pre class="status" id="status">{
+  "received": null,
+  "flag": null
+}</pre>
+
+    </section>
+  </main>
+
+  <script src="/challenge.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "web-challenge-2",
+  "version": "1.0.0",
+  "description": "Simple web CTF: send f/l/a/g simultaneously to get the flag",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
