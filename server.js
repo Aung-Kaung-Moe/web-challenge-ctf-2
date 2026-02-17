@@ -79,6 +79,15 @@ app.get("/h1nt", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "h1nt.html"));
 });
 
+app.get("/api/h1nt-message", (req, res) => {
+  res.setHeader("Cache-Control", "no-store, max-age=0");
+  res.json({
+    message:
+      "If the server checks that four letters arrive at the same time, you will get flag. Make sure you request with same session id for all four letters!"
+  });
+});
+
+
 app.post("/api/press", (req, res) => {
   const sid = getSessionId(req, res);
   const letter = String(req.body?.button || "").toLowerCase();
