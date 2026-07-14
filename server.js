@@ -7,12 +7,12 @@ const PORT = process.env.PORT || 3000;
 
 // ---- Challenge config ----
 const FLAG = process.env.FLAG || "flag{f4ke}";
-const WINDOW_MS = 50;  
+const HOLD_MS = 250;
 const REQUIRED = new Set(["f", "l", "a", "g"]);
 
 // In-memory per-session storage:
-// sessionId -> [{ letter, ts }]
-const seen = new Map();
+// sessionId -> [{ letter, wins, claimed }]
+const pending = new Map();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public"), { etag: false }));
@@ -33,28 +33,28 @@ function getSessionId(req, res) {
   return sid;
 }
 
-function pruneOld(arr, now) {
-  // keep only last ~2 seconds of events for this session
-  const cutoff = now - 2000;
-  return arr.filter(e => e.ts >= cutoff);
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
-function checkSameTime(arr) {
-  // Use the most recent timestamp of each letter
-  const last = { f: null, l: null, a: null, g: null };
 
-  for (const e of arr) {
-    if (REQUIRED.has(e.letter)) last[e.letter] = e.ts;
+function markWinningPacket(arr, winner) {
+  const byLetter = new Map();
+
+  for (const entry of arr) {
+    if (!entry.claimed && !byLetter.has(entry.letter)) {
+      byLetter.set(entry.letter, entry);
+    }
   }
 
-  // must have all 4
-  for (const k of ["f", "l", "a", "g"]) {
-    if (last[k] === null) return false;
+  for (const letter of REQUIRED) {
+    if (!byLetter.has(letter)) return;
   }
 
-  const times = Object.values(last);
-  const min = Math.min(...times);
-  const max = Math.max(...times);
-  return (max - min) <= WINDOW_MS;
+  for (const entry of byLetter.values()) {
+    entry.claimed = true;
+  }
+
+  winner.wins = true;
 }
 
 // Routes
@@ -88,41 +88,38 @@ app.get("/api/h1nt-message", (req, res) => {
 });
 
 
-app.post("/api/press", (req, res) => {
+app.post("/api/press", async (req, res) => {
   const sid = getSessionId(req, res);
   const letter = String(req.body?.button || "").toLowerCase();
-  const now = Date.now();
 
   if (!REQUIRED.has(letter)) {
     return res.status(400).json({ received: null, flag: null });
   }
 
-  let arr = seen.get(sid);
+  let arr = pending.get(sid);
   if (!arr) {
     arr = [];
-    seen.set(sid, arr);
+    pending.set(sid, arr);
   }
 
-  // prune in-place
-  const cutoff = now - 2000;
-  for (let i = arr.length - 1; i >= 0; i--) {
-    if (arr[i].ts < cutoff) arr.splice(i, 1);
-  }
+  const entry = { letter, wins: false, claimed: false };
+  arr.push(entry);
+  markWinningPacket(arr, entry);
+  await delay(HOLD_MS);
 
-  // append this event
-  arr.push({ letter, ts: now });
-
-  const ok = checkSameTime(arr);
+  const idx = arr.indexOf(entry);
+  if (idx !== -1) arr.splice(idx, 1);
+  if (arr.length === 0) pending.delete(sid);
 
   return res.json({
     received: letter,
-    flag: ok ? FLAG : null
+    flag: entry.wins ? FLAG : null
   });
 });
 
 app.post("/api/reset", (req, res) => {
   const sid = getSessionId(req, res);
-  seen.delete(sid);
+  pending.delete(sid);
   res.json({ ok: true });
 });
 
