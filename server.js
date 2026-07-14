@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ---- Challenge config ----
-const FLAG = process.env.FLAG || "flag{f4ke}";
+const FLAG = "UITCTF{r4c3_c0nd1710n_15_YuMmy}";
 const HOLD_MS = 1500;
 const REQUIRED = new Set(["f", "l", "a", "g"]);
 
