@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 
 // ---- Challenge config ----
 const FLAG = process.env.FLAG || "flag{f4ke}";
-const HOLD_MS = 250;
+const HOLD_MS = 1500;
 const REQUIRED = new Set(["f", "l", "a", "g"]);
 
 // In-memory per-session storage:
