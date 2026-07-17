@@ -233,6 +233,37 @@ body::before{
 }
 .footer a:hover{ color: var(--text); }
 
+.corner-hint{
+  position: fixed;
+  left: 14px;
+  bottom: 14px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  min-height: 34px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.20);
+  background: rgba(8,10,22,.48);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(0,0,0,.34);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+
+.corner-hint:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.32);
+}
+
 /* ---------- /h1nt special: colorful animated background ---------- */
 body.h1nt{
   overflow: hidden;
